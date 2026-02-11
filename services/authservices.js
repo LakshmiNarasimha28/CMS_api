@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/users.js";
 import OTP from "../models/otp.js";
-import {generateOtp}  from "../utils/generateotp.js";
+import {generateOtp}  from "../utils/generateOtp.js";
 import jwt from "jsonwebtoken";
 
 
