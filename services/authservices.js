@@ -1,63 +1,10 @@
-// import express from "express";
-
-// export const initiateSignup = async (email) => {
-//     // Check if user already exists
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//         throw new Error("User with this email already exists");
-//     }
-//     // Remove any existing OTP for this email
-//     await Otp.deleteMany({ email });
-
-//     // Generate a 6-digit OTP
-//     const otp = generateOtp();
-
-//     await Otp.create({
-//         email,
-//         otp,
-//         expiresAt: new Date(Date.now() + 10 * 60 * 1000), // OTP valid for 10 minutes
-//     });
-
-//     return { success: true, message: "OTP sent to email" };
-// };
-
-// export const verifySignupOtp = async (email, otp) => {
-//     const otpRecord = await Otp.findOne({ email });
-//     if (!otpRecord) {
-//         throw new Error("No OTP found for this email"); 
-//     }
-//     if (otpRecord.expiresAt < new Date()) {
-//         await Otp.deleteOne({ email });
-//         throw new Error("OTP has expired");
-//     }
-//     const isMatch = await bcrypt.compare(otp, otpRecord.otp);
-//     if (!isMatch) {
-//         throw new Error("Invalid OTP");
-//     }
-//     await Otp.deleteOne({ email });
-//     return { success: true, message: "OTP verified" };
-// };
-
-// export const login = async (email, password) => {
-//     const user = await User.findOne({ email }).select("+password");
-//     if (!user) {
-//         throw new Error("User not found");
-//     }
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//         throw new Error("Invalid credentials");
-//     }
-//     const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
-//         expiresIn: "1h",
-//     });
-//     return { success: true, token };
-// };
-
 import bcrypt from "bcrypt";
 import User from "../models/users.js";
 import OTP from "../models/otp.js";
-import { generateOtp } from "../utils/generateOtp.js";
+import {generateOtp}  from "../utils/generateotp.js";
 import jwt from "jsonwebtoken";
+
+
 /**
  * Initiate signup by generating OTP
  */
@@ -129,43 +76,44 @@ export const verifySignupOtpService = async ({
   return {
     id: user._id,
     name: user.name,
-    email: user.email
+    email: user.email,
+    role: user.role
   };
 };
 
 
 
-// export const loginService = async (email, password) => {
-//   const user = await User
-//     .findOne({ email })
-//     .select("+password");
+export const loginService = async (email, password) => {
+  const user = await User
+    .findOne({ email })
+    .select("+password");
 
-//   if (!user) {
-//     throw new Error("Invalid email or password");
-//   }
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
 
-//   const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.password);
 
-//   if (!isMatch) {
-//     throw new Error("Invalid email or password");
-//   }
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
 
-//   const token = jwt.sign(
-//     {
-//       id: user._id,
-//       role: user.role
-//     },
-//     process.env.JWT_SECRET,
-//     { expiresIn: "1h" }
-//   );
+  const token = jwt.sign(
+    {
+      id: user._id,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 
-//   return {
-//     token,
-//     user: {
-//       id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role
-//     }
-//   };
-// };
+  return {
+    token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }
+  };
+};

@@ -4,6 +4,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/authroutes.js";
 import artifactRoutes from "./routes/artifactsroutes.js";
 import cookieParser from "cookie-parser";
+import likesRoutes from "./routes/likesroutes.js";
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/auth", authRoutes);
 app.use("/artifacts", artifactRoutes);
+app.use("/likes", likesRoutes);
 
 export default app;

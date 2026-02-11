@@ -1,4 +1,4 @@
-import {initiateSignup} from "../services/authservices.js";
+import {initiateSignupService , verifySignupOtpService, loginService} from "../services/authservices.js";
 
 export const initiateSignup = async (req, res) => {
     try {
@@ -50,23 +50,49 @@ export const verifySignupOtp = async (req, res) => {
 };
 
 
+// export const login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Email and password required"
+//       });
+//     }
+
+//     const result = await loginService(email, password);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Login successful",
+//       ...result
+//     });
+//   } catch (error) {
+//     res.status(401).json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// };
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Email and password required"
-      });
-    }
-
     const result = await loginService(email, password);
+
+    res.cookie("token", result.token, {
+        httpOnly: true,
+        secure: false, // Set to true in production with HTTPS
+        sameSite: "lax", // Adjust as needed (strict, lax, none)
+        maxAge: 3600000 // 1 hour
+    });
 
     res.status(200).json({
       success: true,
       message: "Login successful",
-      ...result
+      user: result.user
     });
   } catch (error) {
     res.status(401).json({
