@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import authRoutes from "./routes/authroutes.js";
-import artifactRoutes from "./routes/artifactsroutes.js";
+import artifactRoutes from "./routes/artifactroutes.js";
 import cookieParser from "cookie-parser";
 import likesRoutes from "./routes/likesroutes.js";
+import commentRoutes from "./routes/commentsroutes.js";
+import cloudinary from "./config/cloudinary.js";
 
 const app = express();
 
@@ -24,5 +26,12 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/artifacts", artifactRoutes);
 app.use("/likes", likesRoutes);
-
+app.use("/comments", commentRoutes);
 export default app;
+
+
+
+// app.use(cors({
+//   origin: ["https://cms-admin.vercel.app"],
+//   credentials: true
+// }));

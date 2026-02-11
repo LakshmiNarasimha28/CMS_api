@@ -1,12 +1,13 @@
-import { createArtifactService } from "../services/artifactservices";
+import { createArtifactService } from "../services/artifactservices.js";
 
-export const createArtifactController = async (req, res) => {
+export const createArtifact = async (req, res) => {
     try {
         const artifact = await createArtifactService({
             title: req.body.title,
             content: req.body.content,
-            userId: req.user.id
-
+            userId: req.user.id,
+            // file: req.file ? req.file.filename : null
+            filePath: req.file ? req.file.path : null
         });
         res.status(201).json({
             success: true,

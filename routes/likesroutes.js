@@ -1,4 +1,4 @@
-import { toogleLike } from "../controllers/likescontroller";
+import { toogleLike } from "../controllers/likescontroller.js";
 import express from "express";
 
 const router = express.Router();
