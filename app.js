@@ -8,6 +8,8 @@ import likesRoutes from "./routes/likesroutes.js";
 import commentRoutes from "./routes/commentsroutes.js";
 import cloudinary from "./config/cloudinary.js";
 import { testingCron } from "./cron/testing.js";
+import chatRoutes from "./routes/chatroutes.js";
+
 
 const app = express();
 
@@ -28,6 +30,8 @@ app.use("/auth", authRoutes);
 app.use("/artifacts", artifactRoutes);
 app.use("/likes", likesRoutes);
 app.use("/comments", commentRoutes);
+app.use("/chats", chatRoutes);
+
 export default app;
 
 testingCron();

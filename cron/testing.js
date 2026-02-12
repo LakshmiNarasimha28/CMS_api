@@ -17,6 +17,25 @@ export const testingCron = () => {
     });
 }
 
-// export const updateArtifactStatusCron = () => {
-    
-// }
+export const updateArtifactStatusCron = () => {
+    cron.schedule("0 */12 * * *", async () => {
+        console.log("Running artifact archival check for inactive drafts...");
+        try {
+            const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
+            
+            const result = await Artifact.updateMany(
+                {
+                    status: "DRAFT",
+                    updatedAt: { $lt: twelveHoursAgo }
+                },
+                {
+                    $set: { status: "ARCHIVED" }
+                }
+            );
+            
+            console.log(`Archived ${result.modifiedCount} inactive draft artifacts`);
+        } catch (error) {
+            console.error("Error archiving inactive artifacts:", error);
+        }
+    });
+}

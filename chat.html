@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Test</title>
+</head>
+<body>
+    <h1>Live chat testing</h1>
+    <input id="userid" placeholder="Your User Id">
+    <button onclick="connectUser()">Join Chat</button>
+    <br><br>
+
+    <input id="receiverid" placeholder="Receiver Id">
+    <input id="message" placeholder="Your Message">
+    <button onclick="sendMessage()">Send Message</button>
+    
+    <div id="messages"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <script>
+        const socket = io("http://localhost:8000");
+        function connectUser() {
+            const userId = document.getElementById("userid").value;
+            socket.emit("user-online", userId);
+        }
+
+
+        function sendMessage() {
+            const senderId = document.getElementById("userid").value;
+            const receiverId = document.getElementById("receiverid").value;
+            const message = document.getElementById("message").value;
+
+            socket.emit("send-message", { senderId, receiverId, message });
+        }
+        function appendMessage(text) {
+            const div = document.getElementById("messages");
+            const p = document.createElement("p");
+            p.innerText = text;
+            div.appendChild(p);
+        }
+
+        //  Listen for receiver event (correct name)
+        socket.on("received-message", (data) => {
+            appendMessage("Received: " + data.message);
+        });
+
+        //  Listen for sender confirmation
+        socket.on("sent-message", (data) => {
+            appendMessage("Sent: " + data.message);
+        });
+    </script>
+
+</body>
+</html>
