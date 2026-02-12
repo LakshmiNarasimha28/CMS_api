@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import likesRoutes from "./routes/likesroutes.js";
 import commentRoutes from "./routes/commentsroutes.js";
 import cloudinary from "./config/cloudinary.js";
+import { testingCron } from "./cron/testing.js";
 
 const app = express();
 
@@ -29,7 +30,7 @@ app.use("/likes", likesRoutes);
 app.use("/comments", commentRoutes);
 export default app;
 
-
+testingCron();
 
 // app.use(cors({
 //   origin: ["https://cms-admin.vercel.app"],
